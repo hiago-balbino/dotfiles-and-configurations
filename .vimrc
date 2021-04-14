@@ -1,3 +1,5 @@
+set number
+
 let mapleader=","
 
 "*****************
@@ -50,6 +52,7 @@ map <C-y> :NERDTreeToggle<CR>
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 let NERDTreeShowHidden=1
+let NERDTreeShowLineNumbers=1
 
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
@@ -90,8 +93,6 @@ let g:go_auto_sameids = 1
 "* shortcuts *
 "*****************
 
-"* next error: ctrl+n *
-"* previous error: ctrl+m *
 "* goimports: ,i *
 "* gobuild: ,b *
 "* gorun: ,r *
@@ -104,7 +105,9 @@ let g:go_auto_sameids = 1
 "* gotoimplementation: ctrl-] *
 "* goback: ctrl-o or ctrl+t(recomended) *
 "* godeclsdir: ,dd *
+"* who call the function: :GoReferrers *
 "* gofiles(show files that make a package): :GoFiles *
+"* fill struct: :GoFillStruct *
 "* godeps(show dependencies): :GoDeps *
 "* gowhicherrs(to see the error tree(origin)): :GoWhicherrs or ,wc *
 "* gochannelpeers(to know what the history of channel): :GoChannelPeers or ,cp *
@@ -120,6 +123,10 @@ let g:go_auto_sameids = 1
 "* in normal: vif, dif, vaf, daf *
 "* delete: d *
 "* undo: u *
+"* next error: ctrl+n *
+"* previous error: ctrl+m *
+"* :<line> (go to line) *
+"* close window: :ccl *
 
 "* open the NERDTree: ctrl+y *
 

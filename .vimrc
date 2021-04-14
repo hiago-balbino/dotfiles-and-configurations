@@ -1,4 +1,4 @@
-let mapleader = ","
+let mapleader=","
 
 "*****************
 "* vim-plug core *
@@ -44,7 +44,12 @@ endfunction
 
 set autowrite
 
+au filetype go inoremap <buffer> . .<C-x><C-o>
+
 map <C-y> :NERDTreeToggle<CR>
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+let NERDTreeShowHidden=1
 
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
@@ -77,9 +82,9 @@ let g:go_auto_sameids = 1
 "***********
 "* colors *
 "***********"
-let g:rehash256 = 1
-let g:molokai_original = 1
-colorscheme molokai
+"let g:rehash256 = 1
+"let g:molokai_original = 1
+"colorscheme molokai
 
 "*****************
 "* shortcuts *

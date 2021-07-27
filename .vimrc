@@ -29,10 +29,11 @@ endif
 call plug#begin(expand('~/.vim/plugged'))
 Plug 'scrooloose/nerdtree'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-"Plug 'fatih/molokai'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " run :GoBuild or :GoTestCompile based on the go file
@@ -48,6 +49,8 @@ endfunction
 set autowrite
 
 au filetype go inoremap <buffer> . .<C-x><C-o>
+
+let g:airline_powerline_fonts=1
 
 map <C-y> :NERDTreeToggle<CR>
 let g:NERDTreeDirArrowExpandable = '▸'
@@ -83,17 +86,12 @@ let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
 let g:go_metalinter_deadline = "60s"
 let g:go_auto_sameids = 1
 
-"***********
-"* colors *
-"***********"
-"let g:rehash256 = 1
-"let g:molokai_original = 1
-"colorscheme molokai
-
 "*****************
 "* shortcuts *
 "*****************
 
+"* next error: ctrl+n *
+"* previous error: ctrl+m *
 "* goimports: ,i *
 "* gobuild: ,b *
 "* gorun: ,r *
@@ -106,9 +104,7 @@ let g:go_auto_sameids = 1
 "* gotoimplementation: ctrl-] *
 "* goback: ctrl-o or ctrl+t(recomended) *
 "* godeclsdir: ,dd *
-"* who call the function: :GoReferrers *
 "* gofiles(show files that make a package): :GoFiles *
-"* fill struct: :GoFillStruct *
 "* godeps(show dependencies): :GoDeps *
 "* gowhicherrs(to see the error tree(origin)): :GoWhicherrs or ,wc *
 "* gochannelpeers(to know what the history of channel): :GoChannelPeers or ,cp *
@@ -124,10 +120,6 @@ let g:go_auto_sameids = 1
 "* in normal: vif, dif, vaf, daf *
 "* delete: d *
 "* undo: u *
-"* next error: ctrl+n *
-"* previous error: ctrl+m *
-"* :<line> (go to line) *
-"* close window: :ccl *
 
 "* open the NERDTree: ctrl+y *
 

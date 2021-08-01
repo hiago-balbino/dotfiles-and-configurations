@@ -1,0 +1,1 @@
+eval "$(oh-my-posh --init --shell bash --config ~/AppData/Local/Programs/oh-my-posh/themes/powerlevel10k_rainbow.omp.json)"

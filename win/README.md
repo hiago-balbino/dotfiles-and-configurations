@@ -12,9 +12,9 @@
 * Font size 10px
 * To stylize _Windows Terminal_ you need to install _oh-my-posh_ by _winget_
     * If you don't have _winget_ installed, download the _Windows Package Manager_ [here](https://github.com/microsoft/winget-cli/releases/)
-        * Option `Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle`
+        * Option `Microsoft.DesktopAppInstaller_*.msixbundle`
         * After that you should be able to run `winget` on `terminal`
-    * _oh-my-posh_ documentation [here](https://ohmyposh.dev/docs/windows)
+    * _oh-my-posh_ documentation [here](https://ohmyposh.dev/docs)
         * `winget install JanDeDobbeleer.OhMyPosh`
         * Make sure you have theme downloaded on `~\AppData\Local\Programs\oh-my-posh\themes`
         * Paste this [.bashrc](.bashrc) file on `%USERPROFILE%`

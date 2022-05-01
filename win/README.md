@@ -1,6 +1,6 @@
 > # **Configurations**
 
-## General [here](../general-config.md)
+## General [here](../README.md)
 ---
 
 ## Terminal on Windows
@@ -25,6 +25,8 @@
 ---
 
 ### _Windows Terminal_ configuration sample
+_Items in screen position will depend on the app version and may differ from the images below_
+
 ![windows-terminal-general](windows-terminal-general.PNG)
 
 ![windows-terminal-appearance](windows-terminal-appearance.PNG)

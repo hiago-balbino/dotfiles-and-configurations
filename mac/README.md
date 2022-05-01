@@ -1,6 +1,6 @@
 > # **Configurations**
 
-## General [here](../general-config.md)
+## General [here](../README.md)
 
 * Copy [_.vimrc_](.vimrc) file to `%USERPROFILE%`
 * Run `:PlugInstall` inside `vim`

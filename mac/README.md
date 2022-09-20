@@ -27,7 +27,7 @@
     call plug#end()
     ```
     * Run `:PlugInstall` inside `vim`
-* Tango Dark theme
+* Tango Dark or Gruvbox Dark theme
 * Font MesloLGS NF(Regular)
 * Font size 14px
 * Configure Status Bar(bottom)

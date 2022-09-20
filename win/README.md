@@ -7,7 +7,7 @@
 
 * Install _Windows Terminal_ on _Microsoft Store_
 * Configure _Windows Terminal_ to run with _bash_ on _settings_
-* Tango Dark theme
+* Tango Dark or Gruvbox Dark theme
 * MesloLGS NF font
 * Font size 10px
 * To stylize _Windows Terminal_ you need to install _oh-my-posh_ by _winget_

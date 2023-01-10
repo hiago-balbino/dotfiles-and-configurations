@@ -2,6 +2,10 @@
 
 ## IDE
 
+* [Vim](https://www.vim.org)
+   * Linux configurations: [.vimrc](./linux/README.md)
+   * MacOS configurations: [.vimrc](./mac/README.md)
+
 * GoLand & IntelliJ
    * Darcula or Gruvbox Dark theme
    * Font [Hack](https://www.wfonts.com/font/hack)

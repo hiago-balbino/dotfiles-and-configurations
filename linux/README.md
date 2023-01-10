@@ -2,6 +2,11 @@
 
 ## General [here](../README.md)
 
+* Pre-requirements
+  * Python3.x and pip (latest)
+  * pynvim library
+  * NodeJS (latest)
+  * NerdFont (Hack)
 * Copy [_.vimrc_](.vimrc) file to `%USERPROFILE%`
 * Run `:PlugInstall` inside `vim`
 ---

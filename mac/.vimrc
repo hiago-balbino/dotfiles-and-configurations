@@ -1,126 +1,284 @@
-set number
-set backspace=indent,eol,start
-
-let mapleader=","
-
-"*****************
-"* vim-plug core *
-"*****************
-
-let vimplug_exists=expand('~/.vim/autoload/plug.vim')
-
-if !filereadable(vimplug_exists)
-  if !executable("curl")
-    echoerr "You have to install curl or first install vim-plug!"
-  endif
-  echo "Installing Vim-Plug..."
-  echo ""
-  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-  let g:installation_finished = 'yes'
-
-  autocmd VimEnter * PlugInstall
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
 
-"***********
-"* plugins *
-"***********
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
 
-call plug#begin(expand('~/.vim/plugged'))
-Plug 'scrooloose/nerdtree'
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'ctrlpvim/ctrlp.vim'
+" Plugins configurations
+call plug#begin()
+Plug 'sainnhe/gruvbox-material'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
+Plug 'sheerun/vim-polyglot'
+Plug 'preservim/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
+Plug 'honza/vim-snippets'
+Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
-" run :GoBuild or :GoTestCompile based on the go file
-function! s:build_go_files()
-  let l:file = expand('%')
-  if l:file =~# '^\f\+_test\.go$'
-    call go#test#Test(0, 1)
-  elseif l:file =~# '^\f\+\.go$'
-    call go#cmd#Build(0)
+" Global settings
+syntax on            " Enable syntax highlight
+set nu               " Enable line numbers
+set tabstop=4        " Show existing tab with 4 spaces width
+set softtabstop=4    " Show existing tab with 4 spaces width
+set shiftwidth=4     " When indenting with '>', use 4 spaces width
+set expandtab        " On pressing tab, insert 4 spaces
+set smarttab         " insert tabs on the start of a line according to shiftwidth
+set smartindent      " Automatically inserts one extra level of indentation in some cases
+set hidden           " Hides the current buffer when a new file is openned
+set incsearch        " Incremental search
+set ignorecase       " Ingore case in search
+set smartcase        " Consider case if there is a upper case character
+set scrolloff=8      " Minimum number of lines to keep above and below the cursor
+set colorcolumn=120  " Draws a line at the given line to keep aware of the line size
+set signcolumn=yes   " Add a column on the left. Useful for linting
+set cmdheight=2      " Give more space for displaying messages
+set updatetime=100   " Time in miliseconds to consider the changes
+set encoding=utf-8   " The encoding should be utf-8 to activate the font icons
+set nobackup         " No backup files
+set nowritebackup    " No backup files
+set splitright       " Create the vertical splits to the right
+set splitbelow       " Create the horizontal splits below
+set autoread         " Update vim after file update from outside
+set mouse=a          " Enable mouse support
+filetype on          " Detect and set the filetype option and trigger the FileType Event
+filetype plugin on   " Load the plugin file for the file type, if any
+filetype indent on   " Load the indent file for the file type, if any
+let &t_SI = "\e[6 q"
+let &t_EI = "\e[2 q"
+
+" Themes
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+set background=dark
+let g:gruvbox_material_better_performance = 1
+let g:gruvbox_material_background = 'medium'
+let g:gruvbox_material_enable_italic = 1
+let g:gruvbox_material_disable_italic_comment = 0
+let g:gruvbox_material_diagnostic_line_highlight = 1
+let g:gruvbox_material_current_word = 'bold'
+colorscheme gruvbox-material
+
+" AirLine
+let g:airline_theme = 'gruvbox_material'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" Nerdtree
+nmap <C-a> :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
+" (Nerdtree) Shortcuts for split navigation
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" Remaps
+" Create a tab
+nmap te :tabe<CR>
+" Navigate between buffers
+nmap ty :bn<CR>
+nmap tr :bp<CR>
+" Delete a buffer
+nmap td :bd<CR>
+" Create splits
+nmap th :split<CR>
+nmap tv :vsplit<CR>
+" Close splits and others
+nmap tt :q<CR>
+
+" Autocmd
+function! HighlightWordUnderCursor()
+    if getline(".")[col(".")-1] !~# '[[:punct:][:blank:]]'
+        exec 'match' 'Search' '/\V\<'.expand('<cword>').'\>/'
+    else
+        match none
+    endif
+endfunction
+autocmd! CursorHold,CursorHoldI * call HighlightWordUnderCursor()
+
+" Coc (Conquer of completion)
+let g:coc_global_extensions = [ 'coc-snippets', ]
+
+" Use tab for trigger completion with characters ahead and navigate
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion
+inoremap <silent><expr> <c-@> coc#refresh()
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call ShowDocumentation()<CR>
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
   endif
 endfunction
 
-set autowrite
+" Highlight the symbol and its references when holding the cursor
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
-au filetype go inoremap <buffer> . .<C-x><C-o>
+" Symbol renaming
+nmap <leader>rn <Plug>(coc-rename)
 
-let g:airline_powerline_fonts=1
+" Formatting selected code
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
-map <C-y> :NERDTreeToggle<CR>
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
-let NERDTreeShowHidden=1
-let NERDTreeShowLineNumbers=1
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s)
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
-map <C-n> :cnext<CR>
-map <C-m> :cprevious<CR>
-nnoremap <leader>a :cclose<CR>e
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-autocmd FileType go nmap <leader>r <Plug>(go-run)
-autocmd FileType go nmap <leader>t <Plug>(go-test)
-autocmd FileType go nmap <leader>c <Plug>(go-coverage)
-autocmd FileType go nmap <leader>cb <Plug>(go-coverage-browser)
-autocmd FileType go nmap <leader>i <Plug>(go-imports)
-autocmd FileType go nmap <leader>l <Plug>(go-metalinter)
-autocmd FileType go nmap <leader>dd <Plug>(go-decls-dir)
-autocmd FileType go nmap <leader>cc <Plug>(go-callers)
-autocmd FileType go nmap <leader>cp <Plug>(go-channel-peers)
-autocmd FileType go nmap <leader>wc <Plug>(go-whicherrs)
+" Applying code actions to the selected code block
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-let g:go_list_type = "quickfix"
-let g:go_fmt_command = "goimports"
-let g:go_fmt_fail_silently = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_extra_types = 1
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-let g:go_metalinter_deadline = "60s"
-let g:go_auto_sameids = 1
+" Remap keys for applying code actions at the cursor position
+nmap <leader>ac  <Plug>(coc-codeaction-cursor)
+" Remap keys for apply code actions affect whole buffer
+nmap <leader>as  <Plug>(coc-codeaction-source)
+" Apply the most preferred quickfix action to fix diagnostic on the current line
+nmap <leader>qf  <Plug>(coc-fix-current)
 
-"*****************
-"* shortcuts *
-"*****************
+" Remap keys for applying refactor code actions
+nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
+xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
 
-"* next error: ctrl+n *
-"* previous error: ctrl+m *
-"* goimports: ,i *
-"* gobuild: ,b *
-"* gorun: ,r *
-"* gotest: ,t *
-"* gocoverage: ,c *
-"* gometalinter: ,l *
-"* gocoveragebrowser: ,cb *
-"* godoc: :GoDoc or Shift+k *
-"* goinfo(show info of function): :GoInfo *
-"* gotoimplementation: ctrl-] *
-"* goback: ctrl-o or ctrl+t(recomended) *
-"* godeclsdir: ,dd *
-"* gofiles(show files that make a package): :GoFiles *
-"* godeps(show dependencies): :GoDeps *
-"* gowhicherrs(to see the error tree(origin)): :GoWhicherrs or ,wc *
-"* gochannelpeers(to know what the history of channel): :GoChannelPeers or ,cp *
-"* gocallers: :GoCallers or ,cc *
-"* implement interface: :GoImpl INTERFACE_HERE_WITH_PACKAGE or :GoImpl YOUR_STRUCT *YOUR_STRUCT fmt.Stringer *
-"* share code with playground: :GoPlay *
-"* rename: :GoRename NAME_HERE *
-"* jump to next function: ]] or count]] *
-"* jump to previous function: [[ or count[[ *
-"* delete function: d]] *
-"* select code: v]] and then ]] to select more *
-"* at the end to the word: ,a *
-"* in normal: vif, dif, vaf, daf *
-"* delete: d *
-"* undo: u *
+" Run the Code Lens action on the current line
+nmap <leader>cl  <Plug>(coc-codelens-action)
 
-"* open the NERDTree: ctrl+y *
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
 
-"* reference: https://gist.github.com/krlvi/d22bdcb66566261ea8e8da36f796fa0a *
+" Remap <C-f> and <C-b> to scroll float windows/popups
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
+
+" Use CTRL-S for selections ranges
+" Requires 'textDocument/selectionRange' support of language server
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer
+command! -nargs=0 Format :call CocActionAsync('format')
+
+" Add `:Fold` command to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+" Coc Snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'

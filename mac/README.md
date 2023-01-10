@@ -2,15 +2,23 @@
 
 ## General [here](../README.md)
 
+* Requirements
+  * Python3.x and pip (latest)
+  * pynvim library
+  * NodeJS (latest)
+  * NerdFont (Hack or MesloLGS NF(Regular))
 * Copy [_.vimrc_](.vimrc) file to `%USERPROFILE%`
 * Run `:PlugInstall` inside `vim`
 ---
 
-## Terminal on MacOS
+## Terminal on macOS
 
-* [Guide](https://medium.com/@jeantimex/how-to-configure-iterm2-and-vim-like-a-pro-on-macos-e303d25d5b5c) to configure _iterm2_ and vim like a PRO
----
 * iTerm2
+* zsh (if not the default on macOS)
+* Install [oh-my-zsh](https://ohmyz.sh)
+    ```
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    ```
 * Powerlevel10k
     * Run the following commands to install Powerlevel10k:
     ```
@@ -19,7 +27,7 @@
     ```
     * Now launch iTerm2 and let’s configure Powerlevel10k theme using the configuration wizard or run `p10k configure`
 * Tango Dark or Gruvbox Dark theme
-* Font MesloLGS NF(Regular) or Hack
+* Font Hack or MesloLGS NF(Regular)
 * Font size 14px
 * Configure Status Bar(bottom)
     * Folder

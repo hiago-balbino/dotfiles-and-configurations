@@ -4,7 +4,7 @@
 * Requirements
    * Install some [NerdFont](https://www.nerdfonts.com/font-downloads)(ex: MesloLG Nerd Font)
    * Ripgrep
-   * Build essentials on linux(`sudo apt install build-essentials`)
+   * Build essentials on linux(`sudo apt install build-essential`)
 * Install neovim >= 0.9.* (from source)
    * Ensure that `.local/share/nvim` and `.cache/nvim` does not exist
    * Download tarball file
@@ -12,9 +12,9 @@
    * Move extracted file to `/usr/local/bin`
    * Create symbolic link `ln -s ./<extracted-file>/bin/nvim ./nvim`
    * Install [Packer](https://github.com/wbthomason/packer.nvim)(Plugin Manager to neovim)
-   * Install language server
    * Copy [base files](/nvim) to `.config/nvim/`
    * Command to install dependencies: `PackerSync`
+   * Install language server
    * `:Mason`(use `'i'` to install)
 
 ## @vim

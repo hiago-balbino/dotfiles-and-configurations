@@ -35,3 +35,8 @@
 
 ## @Visual Studio Code
    * Dark+ (default dark) or Gruvbox Dark theme
+
+## @i3wm
+
+* i3 [installation](https://i3wm.org)
+* Copy [config file](/i3wm/config) to `.config/i3`
